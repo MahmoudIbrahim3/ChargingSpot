@@ -166,6 +166,7 @@ class ChargingSpotsFragment : BaseFragment() {
     private fun initLocationLiveData() {
         locationViewModel.location?.observe(viewLifecycleOwner) {
             it?.let {
+                startLoading(swipeToRefresh)
                 loadChargingSpots(it)
             }
         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -23,7 +24,7 @@ class ChargingSpotDetailsFragment : BaseFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
-    lateinit var viewModel: CharingSpotDetailsViewModel
+    lateinit var viewModel: ChargingSpotDetailsViewModel
 
     private var twoPane: Boolean = false
 
@@ -65,7 +66,7 @@ class ChargingSpotDetailsFragment : BaseFragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(CharingSpotDetailsViewModel::class.java)
+            .get(ChargingSpotDetailsViewModel::class.java)
     }
 
     private fun loadNewsDetails() {
@@ -88,10 +89,18 @@ class ChargingSpotDetailsFragment : BaseFragment() {
                 .error(R.drawable.image_banner_placeholder)
                 .into(ivBackImage)
 
-//            tvDescription.text = description
-//            tvSource.text = source?.name
-//
-//            tvContent.text = content
+            tvName.text = name
+            tvAddress.text = address
+            tvDistance.text = getString(R.string.distance_in_km, distance.toString())
+
+            if(status == true) {
+                tvStatus.text = getString(R.string.opened)
+                tvStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.status_opened))
+            }
+            else {
+                tvStatus.text = getString(R.string.closed)
+                tvStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.status_closed))
+            }
         }
     }
 }

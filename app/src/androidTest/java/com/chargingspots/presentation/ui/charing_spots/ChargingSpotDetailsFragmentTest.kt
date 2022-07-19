@@ -39,8 +39,8 @@ class ChargingSpotDetailsFragmentTest {
         val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
         val bundle = Bundle()
         val spotEntity = SpotEntity(
-            description = "description",
-            content = "content"
+            name = "name",
+            address = "address"
         )
 
         bundle.putString(AppConst.INTENT_SPOT_ENTITY, Gson().toJson(spotEntity))
@@ -52,7 +52,7 @@ class ChargingSpotDetailsFragmentTest {
 
         Thread.sleep(1000)
 
-        onView(withId(R.id.tvDescription)).check(matches(withText(spotEntity.description)))
-        onView(withId(R.id.tvContent)).check(matches(withText(spotEntity.content)))
+        onView(withId(R.id.tvName)).check(matches(withText(spotEntity.name)))
+        onView(withId(R.id.tvAddress)).check(matches(withText(spotEntity.address)))
     }
 }

@@ -59,13 +59,13 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDistance"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/ThirdTextView"
             android:layout_marginBottom="@dimen/margin_8"
             android:maxLines="1"
             android:textColor="@color/primary_text"
-            tools:text="CNN"
+            tools:text="5 km"
             android:gravity="end|bottom"
             app:layout_constraintStart_toStartOf="@id/tvName"
             app:layout_constraintBottom_toBottomOf="parent"

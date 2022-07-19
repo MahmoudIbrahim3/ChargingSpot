@@ -1,7 +1,8 @@
 package com.chargingspots.core.usecases
 
 import com.chargingspots.core.entities.Const
-import com.chargingspots.core.entities.TopHeadlinesResponse
+import com.chargingspots.core.entities.LocationEntity
+import com.chargingspots.core.entities.SpotEntity
 import com.chargingspots.core.gateways.ChargingSpotsGateWay
 import org.junit.Test
 import junit.framework.Assert.assertEquals
@@ -12,15 +13,20 @@ class LoadTopHeadlinesUseCaseTest {
 
     @Test
     fun testLoadTopHeadlinesUseCase_success() {
-        val topHeadlinesResponse = TopHeadlinesResponse()
-        topHeadlinesResponse.status = Const.STATUS_OK
+        val chargingSpotsResponse = arrayListOf(SpotEntity())
 
-        val filterEntity = FilterEntity()
-        whenever(chargingSpotsGateWay.loadChargingSpots(filterEntity)).thenReturn(topHeadlinesResponse)
+        val locationEntity = LocationEntity(10.0, 20.0)
+        whenever(
+            chargingSpotsGateWay.loadChargingSpots(
+                null, null, locationEntity
+            )
+        )
+            .thenReturn(chargingSpotsResponse)
 
-        val actualTopHeadlineResponse = LoadTopHeadlinesUseCase(chargingSpotsGateWay).invoke(filterEntity)
-                as TopHeadlinesResponse
+        val actualChargingSpotsResponse =
+            LoadChargingSpotsUseCase(chargingSpotsGateWay).invoke(null, null, locationEntity)
+                    as List<SpotEntity>
 
-        assertEquals(actualTopHeadlineResponse.status, Const.STATUS_OK)
+        assertEquals(actualChargingSpotsResponse.size, 1)
     }
 }

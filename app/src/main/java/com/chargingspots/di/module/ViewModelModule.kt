@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.chargingspots.di.ViewModelFactory
 import com.chargingspots.di.ViewModelKey
 import com.chargingspots.presentation.ui.settings.SettingsViewModel
-import com.chargingspots.presentation.ui.charging_spot_details.CharingSpotDetailsViewModel
+import com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsViewModel
 import com.chargingspots.presentation.ui.charing_spots.ChargingSpotsViewModel
 import com.chargingspots.presentation.ui.filter.FilterViewModel
 import com.chargingspots.presentation.ui.location.LocationViewModel
@@ -36,8 +36,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(CharingSpotDetailsViewModel::class)
-    abstract fun bindChargingSpotDetailsViewModel(chargingSpotDetailsViewModel: CharingSpotDetailsViewModel): ViewModel
+    @ViewModelKey(ChargingSpotDetailsViewModel::class)
+    abstract fun bindChargingSpotDetailsViewModel(chargingSpotDetailsViewModel: ChargingSpotDetailsViewModel): ViewModel
 
     @Binds
     @IntoMap

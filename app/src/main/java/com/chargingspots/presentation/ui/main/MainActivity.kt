@@ -242,7 +242,7 @@ class MainActivity : BaseActivity() {
                 intent.getParcelableExtra<Location>(LocationUpdatesService.EXTRA_LOCATION)
             if (location != null) {
                 locationViewModel.location?.value =
-                    LocationEntity(location.latitude, location.longitude)
+                    LocationEntity(25.2048, 55.2708)
             }
         }
     }

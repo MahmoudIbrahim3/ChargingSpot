@@ -71,18 +71,11 @@ public class LocationUpdatesService extends Service {
             "com.google.android.gms.location.sample.locationupdatesforegroundservice";
 
     private static final String TAG = LocationUpdatesService.class.getSimpleName();
-
-    /**
-     * The name of the channel for notifications.
-     */
     private static final String CHANNEL_ID = "channel_01";
-
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
             ".started_from_notification";
-
     private final IBinder mBinder = new LocalBinder();
 
     /**
@@ -171,7 +164,7 @@ public class LocationUpdatesService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "Service started");
+        Timber.i("Service started");
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
@@ -196,7 +189,7 @@ public class LocationUpdatesService extends Service {
         // Called when a client (MainActivity in case of this sample) comes to the foreground
         // and binds with this service. The service should cease to be a foreground service
         // when that happens.
-        Log.i(TAG, "in onBind()");
+        Timber.i( "in onBind()");
         stopForeground(true);
         mChangingConfiguration = false;
         return mBinder;
@@ -207,7 +200,7 @@ public class LocationUpdatesService extends Service {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
-        Log.i(TAG, "in onRebind()");
+        Timber.i( "in onRebind()");
         stopForeground(true);
         mChangingConfiguration = false;
         super.onRebind(intent);
@@ -215,13 +208,13 @@ public class LocationUpdatesService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.i(TAG, "Last client unbound from service");
+        Timber.i( "Last client unbound from service");
 
         // Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
         if (!mChangingConfiguration && LocationUtils.INSTANCE.requestingLocationUpdates(this)) {
-            Log.i(TAG, "Starting foreground service");
+            Timber.i( "Starting foreground service");
             /*// TODO(developer). If targeting O, use the following code.
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
                 mNotificationManager.startServiceInForeground(new Intent(this,
@@ -244,7 +237,7 @@ public class LocationUpdatesService extends Service {
      * {@link SecurityException}.
      */
     public void requestLocationUpdates() {
-        Log.i(TAG, "Requesting location updates");
+        Timber.i( "Requesting location updates");
         LocationUtils.INSTANCE.setRequestingLocationUpdates(this, true);
         startService(new Intent(getApplicationContext(), LocationUpdatesService.class));
         try {
@@ -261,7 +254,7 @@ public class LocationUpdatesService extends Service {
      * {@link SecurityException}.
      */
     public void removeLocationUpdates() {
-        Log.i(TAG, "Removing location updates");
+        Timber.i( "Removing location updates");
         try {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             LocationUtils.INSTANCE.setRequestingLocationUpdates(this, false);

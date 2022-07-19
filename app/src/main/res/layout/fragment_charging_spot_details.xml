@@ -64,7 +64,7 @@
                     android:padding="@dimen/margin_8">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvDescription"
+                        android:id="@+id/tvName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         style="@style/PrimaryTextView"
@@ -77,19 +77,34 @@
                         app:layout_constraintTop_toTopOf="parent"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvDate"
+                        android:id="@+id/tvAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/ThirdTextView"
                         android:textStyle="bold"
                         tools:text="April 23, 2021"
-                        android:layout_marginTop="@dimen/margin_24"
+                        android:layout_marginBottom="@dimen/margin_16"
                         android:paddingEnd="@dimen/margin_16"
-                        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+                        app:layout_constraintTop_toBottomOf="@id/tvName"
+                        app:layout_constraintBottom_toTopOf="@id/tvDistance"
                         app:layout_constraintStart_toStartOf="parent"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvSource"
+                        android:id="@+id/tvDistance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        style="@style/ThirdTextView"
+                        android:layout_marginBottom="@dimen/margin_8"
+                        android:maxLines="1"
+                        android:textColor="@color/primary_text"
+                        tools:text="CNN"
+                        android:gravity="end|bottom"
+                        app:layout_constraintStart_toStartOf="@id/tvName"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvStatus"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         style="@style/ThirdTextView"
@@ -98,10 +113,10 @@
                         tools:text="CNN"
                         android:gravity="end"
                         android:ellipsize="end"
-                        app:layout_constraintStart_toEndOf="@id/tvDate"
+                        app:layout_constraintStart_toEndOf="@id/tvAddress"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvDate"
-                        app:layout_constraintBottom_toBottomOf="@id/tvDate"
+                        app:layout_constraintTop_toTopOf="@id/tvDistance"
+                        app:layout_constraintBottom_toBottomOf="@id/tvDistance"
                         />
 
                     <androidx.constraintlayout.widget.Guideline
@@ -114,22 +129,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/PrimaryTextView"
-                tools:text="@tools:sample/lorem/random"
-                android:paddingStart="@dimen/margin_16"
-                android:paddingEnd="@dimen/margin_16"
-                android:paddingTop="@dimen/margin_24"
-                android:paddingBottom="@dimen/margin_16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvDescriptionCard"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
 
             <include layout="@layout/layout_screen_loading"/>
 
