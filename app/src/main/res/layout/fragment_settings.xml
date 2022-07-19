@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.ui.settings.SettingsFragment"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_16"
+    android:gravity="center_horizontal">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvMaxDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SecondaryTextView"
+        tools:text="@string/max_distance"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/maxDistanceSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        android:min="0"
+        android:max="200"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPageSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SecondaryTextView"
+        tools:text="@string/max_distance"
+        android:layout_marginTop="@dimen/margin_16"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/pageSizeSeekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginTop="@dimen/margin_8"
+        android:min="0"
+        android:max="20"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btApply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/apply"
+        style="@style/PrimaryTextView"
+        android:padding="@dimen/margin_8"
+        android:layout_marginTop="@dimen/margin_16"
+        android:textAllCaps="true"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</LinearLayout>

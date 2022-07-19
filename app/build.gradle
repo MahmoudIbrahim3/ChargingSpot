@@ -1,0 +1,124 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        applicationId "com.chargingspots"
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "com.chargingspots.CustomTestRunner"
+
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        jumboMode true
+        preDexLibraries true
+        javaMaxHeapSize "4g"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions
+    {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    viewBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation project(path: ':core')
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+
+    def retrofit2_version = '2.6.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+    def logging_version = '4.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_version"
+
+    def glide_version = "4.12.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    def view_model_ktx_version = "2.4.1"
+    def view_model_version = "1.1.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$view_model_ktx_version"
+    implementation "android.arch.lifecycle:viewmodel:$view_model_version"
+
+    def timber_version = "5.0.1"
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    def nav_version = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    def paging_version = "3.0.0-alpha06"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    def junit = "4.12"
+    def junit_ext = "1.1.2"
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "androidx.test.ext:junit:$junit_ext"
+
+    def espresso_version = "3.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+
+    def test_runner = "1.4.0"
+    androidTestImplementation "androidx.test:runner:$test_runner"
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
+
+    def fragment_version = "1.4.1"
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
+    def hilt_testing = "2.38.1"
+    testImplementation("com.google.dagger:hilt-android-testing:$hilt_testing")
+    kaptTest("com.google.dagger:hilt-android-compiler:$hilt_testing")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt_testing")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hilt_testing")
+
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
+
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
+
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

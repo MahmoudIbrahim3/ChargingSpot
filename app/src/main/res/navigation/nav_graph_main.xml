@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.chargingspots.presentation.ui.charing_spots.ChargingSpotsFragment"
+        android:label="NewsFragment"
+        tools:layout="@layout/fragment_charging_spots">
+        <action
+            android:id="@+id/action_newsFragment_to_newsDetailsFragment"
+            app:destination="@id/newsDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newsDetailsFragment"
+        android:name="com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsFragment"
+        android:label="fragment_news_details"
+        tools:layout="@layout/fragment_charging_spot_details" />
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.chargingspots.presentation.ui.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_newsFragment"
+            app:destination="@id/newsFragment"
+            app:popUpTo="@+id/nav_graph_main"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/fade_in_anim"
+            app:exitAnim="@anim/fade_out_anim"/>
+    </fragment>
+
+</navigation>

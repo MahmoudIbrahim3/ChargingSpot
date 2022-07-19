@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="base_url" translatable="false">https://62d5a7e9d4406e52355f2923.mockapi.io/api/v1/</string>
+</resources>

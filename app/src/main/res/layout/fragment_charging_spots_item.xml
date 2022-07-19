@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_background"
+    app:cardCornerRadius="@dimen/margin_8"
+    android:layout_marginStart="@dimen/margin_12"
+    android:layout_marginEnd="@dimen/margin_12"
+    android:layout_marginBottom="@dimen/margin_16"
+    android:id="@+id/itemView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/card_background"
+        android:paddingEnd="@dimen/margin_12">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/image_poster_placeholder"
+            app:layout_constraintDimensionRatio="1:1"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/PrimaryTextView"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="@tools:sample/lorem/random"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginStart="@dimen/margin_8"
+            app:layout_constraintStart_toEndOf="@id/ivImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ThirdTextView"
+            tools:text="April 23, 2021"
+            android:gravity="bottom"
+            android:layout_marginTop="@dimen/margin_4"
+            android:layout_marginEnd="@dimen/margin_8"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvName"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/ThirdTextView"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:maxLines="1"
+            android:textColor="@color/primary_text"
+            tools:text="CNN"
+            android:gravity="end|bottom"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/ThirdTextView"
+            android:layout_marginBottom="@dimen/margin_8"
+            android:maxLines="1"
+            android:textColor="@color/primary_text"
+            tools:text="CNN"
+            android:gravity="end|bottom"
+            app:layout_constraintEnd_toEndOf="@id/tvName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
