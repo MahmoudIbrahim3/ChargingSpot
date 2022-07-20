@@ -63,7 +63,7 @@ But, on `portaite orientation` will show the list of spots in a separate screen,
  ]
  ```
  
-* You will note the thumbnails are a random photos (generated using the mockup.io) not related to the electric charging spots. 
+* You will note the thumbnails are a random thumbnails (generated using the mockup.io) not related to the electric charging spots. It's just a mock data..
  
 * You will see the spots sorted ascending by distance (based on the user’s current location and the spot location) but, only on the page level not on all pages as a whole. I can solve this issue after and did the sorting for the whole listed spots (whole pages) by caching the data in the room local DB and sort-by the `distance` parameter (that was already  calculated for every spot before being saved in the local DB)
 
