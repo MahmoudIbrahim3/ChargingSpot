@@ -81,7 +81,7 @@ public class LocationUpdatesService extends Service {
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 30000;
 
     /**
      * The fastest rate for active location updates. Updates will never be more frequent
@@ -210,21 +210,15 @@ public class LocationUpdatesService extends Service {
     public boolean onUnbind(Intent intent) {
         Timber.i( "Last client unbound from service");
 
-        // Called when the last client (MainActivity in case of this sample) unbinds from this
+        /*// Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
         if (!mChangingConfiguration && LocationUtils.INSTANCE.requestingLocationUpdates(this)) {
             Timber.i( "Starting foreground service");
-            /*// TODO(developer). If targeting O, use the following code.
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
-                mNotificationManager.startServiceInForeground(new Intent(this,
-                        LocationUpdatesService.class), NOTIFICATION_ID, getNotification());
-            } else {
-                startForeground(NOTIFICATION_ID, getNotification());
-            }*/
             startForeground(NOTIFICATION_ID, getNotification());
         }
-        return true; // Ensures onRebind() is called when a client re-binds.
+        return true; // Ensures onRebind() is called when a client re-binds.*/
+        return false;
     }
 
     @Override

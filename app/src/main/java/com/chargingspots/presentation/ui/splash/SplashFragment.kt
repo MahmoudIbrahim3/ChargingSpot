@@ -47,5 +47,5 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun navigateToNewsFragment() =
-        findNavController().navigate(R.id.action_splashFragment_to_newsFragment)
+        findNavController().navigate(R.id.action_splashFragment_to_spotsFragment)
 }

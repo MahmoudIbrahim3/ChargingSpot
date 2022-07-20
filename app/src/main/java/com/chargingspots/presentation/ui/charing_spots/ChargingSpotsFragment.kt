@@ -133,7 +133,7 @@ class ChargingSpotsFragment : BaseFragment() {
                 navigateToChargingSpotDetailsFragment(arg)
             } else {
                 findNavController().navigate(
-                    R.id.action_newsFragment_to_newsDetailsFragment, arg
+                    R.id.action_spotsFragment_to_spotDetailsFragment, arg
                 )
             }
         }
@@ -216,13 +216,13 @@ class ChargingSpotsFragment : BaseFragment() {
 
     private fun navigateToChargingSpotDetailsFragment(arg: Bundle) {
         val navHostFragment = childFragmentManager.findFragmentById(
-            R.id.nav_host_fragment_news_details
+            R.id.nav_host_fragment_spot_details
         ) as NavHostFragment
-        navHostFragment.navController.navigate(R.id.newsDetailsFragment, arg)
+        navHostFragment.navController.navigate(R.id.spotDetailsFragment, arg)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_news, menu)
+        inflater.inflate(R.menu.menu_spots, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

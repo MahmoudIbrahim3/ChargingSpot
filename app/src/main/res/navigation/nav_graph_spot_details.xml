@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph_news_details"
-    app:startDestination="@id/newsDetailsFragment">
+    android:id="@+id/nav_graph_spot_details"
+    app:startDestination="@id/spotDetailsFragment">
 
     <fragment
-        android:id="@+id/newsDetailsFragment"
+        android:id="@+id/spotDetailsFragment"
         android:name="com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsFragment"
-        android:label="fragment_news_details"
+        android:label="fragment_spot_details"
         tools:layout="@layout/fragment_charging_spot_details" />
 </navigation>

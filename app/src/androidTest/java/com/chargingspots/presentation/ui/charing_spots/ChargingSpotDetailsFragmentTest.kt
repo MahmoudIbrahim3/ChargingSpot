@@ -15,8 +15,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import com.chargingspots.R
 import com.chargingspots.core.entities.SpotEntity
-import com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsFragment
 import com.chargingspots.launchFragmentInHiltContainer
+import com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -46,7 +46,7 @@ class ChargingSpotDetailsFragmentTest {
         bundle.putString(AppConst.INTENT_SPOT_ENTITY, Gson().toJson(spotEntity))
         launchFragmentInHiltContainer<ChargingSpotDetailsFragment>(bundle, R.style.AppTheme) {
             navController.setGraph(R.navigation.nav_graph_main)
-            navController.setCurrentDestination(R.id.newsDetailsFragment)
+            navController.setCurrentDestination(R.id.spotDetailsFragment)
             Navigation.setViewNavController(requireView(), navController)
         }
 

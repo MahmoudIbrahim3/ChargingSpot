@@ -6,19 +6,19 @@
     app:startDestination="@id/splashFragment">
 
     <fragment
-        android:id="@+id/newsFragment"
+        android:id="@+id/spotsFragment"
         android:name="com.chargingspots.presentation.ui.charing_spots.ChargingSpotsFragment"
-        android:label="NewsFragment"
+        android:label="SpotsFragment"
         tools:layout="@layout/fragment_charging_spots">
         <action
-            android:id="@+id/action_newsFragment_to_newsDetailsFragment"
-            app:destination="@id/newsDetailsFragment" />
+            android:id="@+id/action_spotsFragment_to_spotDetailsFragment"
+            app:destination="@id/spotDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/newsDetailsFragment"
+        android:id="@+id/spotDetailsFragment"
         android:name="com.chargingspots.presentation.ui.charging_spot_details.ChargingSpotDetailsFragment"
-        android:label="fragment_news_details"
+        android:label="fragment_spot_details"
         tools:layout="@layout/fragment_charging_spot_details" />
 
     <fragment
@@ -27,8 +27,8 @@
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
-            android:id="@+id/action_splashFragment_to_newsFragment"
-            app:destination="@id/newsFragment"
+            android:id="@+id/action_splashFragment_to_spotsFragment"
+            app:destination="@id/spotsFragment"
             app:popUpTo="@+id/nav_graph_main"
             app:popUpToInclusive="true"
             app:enterAnim="@anim/fade_in_anim"
