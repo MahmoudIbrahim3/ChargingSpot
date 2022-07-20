@@ -43,6 +43,18 @@ android {
     viewBinding {
         enabled = true
     }
+    flavorDimensions 'env'
+    productFlavors {
+        staging {
+            dimension 'env'
+            applicationId 'com.chargingspots'
+            applicationIdSuffix '.staging'
+        }
+        production {
+            dimension 'env'
+            applicationId 'com.chargingspots'
+        }
+    }
 }
 
 dependencies {
@@ -112,9 +124,6 @@ dependencies {
     androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
 
     implementation 'com.google.android.gms:play-services-location:19.0.0'
-
-    implementation "androidx.room:room-ktx:2.4.2"
-    kapt "androidx.room:room-compiler:2.4.2"
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
