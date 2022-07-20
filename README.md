@@ -12,6 +12,7 @@ But, on `portaite orientation` will show the list of spots in a separate screen,
 
 * There is a `Filter` screen has filter by `opened` spots only.
 
+* The app working fine for dark mode.
 
 ## Project description:
 
