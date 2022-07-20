@@ -68,7 +68,7 @@ class ChargingSpotsFragment : BaseFragment() {
         setupAdapter()
         initSwipeToRefresh()
         initChargingSpotsLiveData()
-        initNewsClickLiveData()
+        initSpotClickLiveData()
         initSettingsLiveData()
         initFilterLiveData()
         initLocationLiveData()
@@ -118,14 +118,14 @@ class ChargingSpotsFragment : BaseFragment() {
 
     private fun initChargingSpotsLiveData() {
         viewModel.chargingSpotsLiveData.observe(viewLifecycleOwner) {
+            stopLoading(swipeToRefresh)
             it?.let {
                 renderData(it)
-                stopLoading(swipeToRefresh)
             }
         }
     }
 
-    private fun initNewsClickLiveData() {
+    private fun initSpotClickLiveData() {
         adapter.onSpotClickedLiveData.observe(viewLifecycleOwner) {
             val arg = setUpBundle(it as SpotEntity)
 
@@ -144,7 +144,7 @@ class ChargingSpotsFragment : BaseFragment() {
             it?.let {
                 startLoading(swipeToRefresh)
                 viewModel.chargingSpotsLiveData.value = null
-                if (locationViewModel.location != null) {
+                if (locationViewModel.location?.value != null) {
                     loadChargingSpots(locationViewModel.location?.value!!)
                 }
             }
@@ -156,7 +156,7 @@ class ChargingSpotsFragment : BaseFragment() {
             it?.let {
                 startLoading(swipeToRefresh)
                 viewModel.chargingSpotsLiveData.value = null
-                if (locationViewModel.location != null) {
+                if (locationViewModel.location?.value != null) {
                     loadChargingSpots(locationViewModel.location?.value!!)
                 }
             }

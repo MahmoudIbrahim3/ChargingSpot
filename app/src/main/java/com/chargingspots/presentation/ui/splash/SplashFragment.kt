@@ -42,10 +42,10 @@ class SplashFragment : BaseFragment() {
 
     private fun initSplashLiveData() {
         viewModel.splashLiveData.observe(viewLifecycleOwner) {
-            navigateToNewsFragment()
+            navigateToSpotFragment()
         }
     }
 
-    private fun navigateToNewsFragment() =
+    private fun navigateToSpotFragment() =
         findNavController().navigate(R.id.action_splashFragment_to_spotsFragment)
 }

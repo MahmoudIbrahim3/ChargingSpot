@@ -197,7 +197,7 @@ class MainActivity : BaseActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         Log.i(TAG, "onRequestPermissionResult")
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.size <= 0) {
+            if (grantResults.isEmpty()) {
                 // If user interaction was interrupted, the permission request is cancelled and you
                 // receive empty arrays.
                 Log.i(TAG, "User interaction was cancelled.")
@@ -206,7 +206,6 @@ class MainActivity : BaseActivity() {
                 mService?.requestLocationUpdates()
             } else {
                 // Permission denied.
-//                setButtonsState(false)
                 Snackbar.make(
                     findViewById(R.id.main_layout),
                     R.string.permission_denied_explanation,
