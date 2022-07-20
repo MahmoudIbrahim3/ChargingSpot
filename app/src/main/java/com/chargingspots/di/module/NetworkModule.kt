@@ -51,7 +51,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNewsAPIs(retrofit: Retrofit): ChargingSpotsAPIs {
+    fun provideChargingSpotsAPIs(retrofit: Retrofit): ChargingSpotsAPIs {
         return retrofit.create(ChargingSpotsAPIs::class.java)
     }
 }

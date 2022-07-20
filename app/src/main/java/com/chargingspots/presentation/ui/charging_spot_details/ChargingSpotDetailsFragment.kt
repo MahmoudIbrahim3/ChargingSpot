@@ -44,7 +44,7 @@ class ChargingSpotDetailsFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         initViewModel()
-        loadNewsDetails()
+        loadSpotDetails()
     }
 
     private fun setUpActionBar(title: String?) {
@@ -69,7 +69,7 @@ class ChargingSpotDetailsFragment : BaseFragment() {
             .get(ChargingSpotDetailsViewModel::class.java)
     }
 
-    private fun loadNewsDetails() {
+    private fun loadSpotDetails() {
         arguments?.let {
             val spotEntity = Gson().fromJson(
                 it.getString(AppConst.INTENT_SPOT_ENTITY),

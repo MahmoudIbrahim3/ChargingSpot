@@ -35,7 +35,7 @@ class ChargingSpotDetailsFragmentTest {
     }
 
     @Test
-    fun testNavigateToNewsDetailsFragment_DisplayedOnUI() {
+    fun testNavigateToSpotDetailsFragment_DisplayedOnUI() {
         val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
         val bundle = Bundle()
         val spotEntity = SpotEntity(
