@@ -13,43 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.chargingspots.presentation.ui.location
 
-package com.chargingspots.presentation.ui.location;
-
-import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.location.Location;
-import android.os.Binder;
-import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Looper;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import com.chargingspots.R;
-import com.chargingspots.presentation.ui.main.MainActivity;
-import com.chargingspots.utils.LocationUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import timber.log.Timber;
+import android.app.*
+import android.content.Context
+import com.chargingspots.utils.LocationUtils.setRequestingLocationUpdates
+import com.chargingspots.utils.LocationUtils.getLocationText
+import com.chargingspots.utils.LocationUtils.getLocationTitle
+import com.chargingspots.presentation.ui.location.LocationUpdatesService.LocalBinder
+import com.chargingspots.presentation.ui.location.LocationUpdatesService
+import com.chargingspots.R
+import android.content.Intent
+import android.content.res.Configuration
+import android.location.Location
+import android.os.*
+import androidx.core.app.NotificationCompat
+import timber.log.Timber
+import com.chargingspots.utils.LocationUtils
+import com.chargingspots.presentation.ui.main.MainActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -65,150 +50,109 @@ import timber.log.Timber;
  * continue. When the activity comes back to the foreground, the foreground service stops, and the
  * notification assocaited with that service is removed.
  */
-public class LocationUpdatesService extends Service {
-
-    private static final String PACKAGE_NAME =
-            "com.google.android.gms.location.sample.locationupdatesforegroundservice";
-
-    private static final String TAG = LocationUpdatesService.class.getSimpleName();
-    private static final String CHANNEL_ID = "channel_01";
-    public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-    public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
-    private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
-            ".started_from_notification";
-    private final IBinder mBinder = new LocalBinder();
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 30000;
-
-    /**
-     * The fastest rate for active location updates. Updates will never be more frequent
-     * than this value.
-     */
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    /**
-     * The identifier for the notification displayed for the foreground service.
-     */
-    private static final int NOTIFICATION_ID = 12345678;
+class LocationUpdatesService : Service() {
+    private val mBinder: IBinder = LocalBinder()
 
     /**
      * Used to check whether the bound activity has really gone away and not unbound as part of an
      * orientation change. We create a foreground service notification only if the former takes
      * place.
      */
-    private boolean mChangingConfiguration = false;
-
-    private NotificationManager mNotificationManager;
+    private var mChangingConfiguration = false
+    private var mNotificationManager: NotificationManager? = null
 
     /**
-     * Contains parameters used by {@link com.google.android.gms.location.FusedLocationProviderApi}.
+     * Contains parameters used by [com.google.android.gms.location.FusedLocationProviderApi].
      */
-    private LocationRequest mLocationRequest;
+    private var mLocationRequest: LocationRequest? = null
 
     /**
      * Provides access to the Fused Location Provider API.
      */
-    private FusedLocationProviderClient mFusedLocationClient;
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
 
     /**
      * Callback for changes in location.
      */
-    private LocationCallback mLocationCallback;
-
-    private Handler mServiceHandler;
+    private var mLocationCallback: LocationCallback? = null
+    private var mServiceHandler: Handler? = null
 
     /**
      * The current location.
      */
-    private Location mLocation;
-
-    public LocationUpdatesService() {
-    }
-
-    @Override
-    public void onCreate() {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                onNewLocation(locationResult.getLastLocation());
+    private var mLocation: Location? = null
+    override fun onCreate() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mLocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                onNewLocation(locationResult.lastLocation)
             }
-        };
-
-        createLocationRequest();
-        getLastLocation();
-        requestLocationUpdates();
-
-        HandlerThread handlerThread = new HandlerThread(TAG);
-        handlerThread.start();
-        mServiceHandler = new Handler(handlerThread.getLooper());
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
+        createLocationRequest()
+        lastLocation
+        requestLocationUpdates()
+        val handlerThread = HandlerThread(TAG)
+        handlerThread.start()
+        mServiceHandler = Handler(handlerThread.looper)
+        mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.app_name);
+            val name: CharSequence = getString(R.string.app_name)
             // Create the channel for the notification
-            NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            val mChannel =
+                NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT)
 
             // Set the Notification Channel for the Notification Manager.
-            mNotificationManager.createNotificationChannel(mChannel);
+            mNotificationManager!!.createNotificationChannel(mChannel)
         }
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.i("Service started");
-        boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
-                false);
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Timber.i("Service started")
+        val startedFromNotification = intent.getBooleanExtra(
+            EXTRA_STARTED_FROM_NOTIFICATION,
+            false
+        )
 
         // We got here because the user decided to remove location updates from the notification.
         if (startedFromNotification) {
-            removeLocationUpdates();
-            stopSelf();
+            removeLocationUpdates()
+            stopSelf()
         }
 
         // Tells the system to not try to recreate the service after it has been killed.
-        return START_NOT_STICKY;
+        return START_NOT_STICKY
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mChangingConfiguration = true;
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        mChangingConfiguration = true
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
+    override fun onBind(intent: Intent): IBinder? {
         // Called when a client (MainActivity in case of this sample) comes to the foreground
         // and binds with this service. The service should cease to be a foreground service
         // when that happens.
-        Timber.i( "in onBind()");
-        stopForeground(true);
-        mChangingConfiguration = false;
-        return mBinder;
+        Timber.i("in onBind()")
+        stopForeground(true)
+        mChangingConfiguration = false
+        return mBinder
     }
 
-    @Override
-    public void onRebind(Intent intent) {
+    override fun onRebind(intent: Intent) {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
-        Timber.i( "in onRebind()");
-        stopForeground(true);
-        mChangingConfiguration = false;
-        super.onRebind(intent);
+        Timber.i("in onRebind()")
+        stopForeground(true)
+        mChangingConfiguration = false
+        super.onRebind(intent)
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Timber.i( "Last client unbound from service");
+    override fun onUnbind(intent: Intent): Boolean {
+        Timber.i("Last client unbound from service")
 
         /*// Called when the last client (MainActivity in case of this sample) unbinds from this
         // service. If this method is called due to a configuration change in MainActivity, we
@@ -218,154 +162,193 @@ public class LocationUpdatesService extends Service {
             startForeground(NOTIFICATION_ID, getNotification());
         }
         return true; // Ensures onRebind() is called when a client re-binds.*/
-        return false;
+        return false
     }
 
-    @Override
-    public void onDestroy() {
-        mServiceHandler.removeCallbacksAndMessages(null);
+    override fun onDestroy() {
+        mServiceHandler!!.removeCallbacksAndMessages(null)
     }
 
     /**
      * Makes a request for location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
+     * [SecurityException].
      */
-    public void requestLocationUpdates() {
-        Timber.i( "Requesting location updates");
-        LocationUtils.INSTANCE.setRequestingLocationUpdates(this, true);
-        startService(new Intent(getApplicationContext(), LocationUpdatesService.class));
+    fun requestLocationUpdates() {
+        Timber.i("Requesting location updates")
+        setRequestingLocationUpdates(this, true)
+        startService(Intent(applicationContext, LocationUpdatesService::class.java))
         try {
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                    mLocationCallback, Looper.myLooper());
-        } catch (SecurityException unlikely) {
-            LocationUtils.INSTANCE.setRequestingLocationUpdates(this, false);
-            Timber.e( "Lost location permission. Could not request updates. " + unlikely);
+            mFusedLocationClient!!.requestLocationUpdates(
+                mLocationRequest!!,
+                mLocationCallback!!, Looper.myLooper()!!
+            )
+        } catch (unlikely: SecurityException) {
+            setRequestingLocationUpdates(this, false)
+            Timber.e("Lost location permission. Could not request updates. $unlikely")
         }
     }
 
     /**
      * Removes location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
+     * [SecurityException].
      */
-    public void removeLocationUpdates() {
-        Timber.i( "Removing location updates");
+    fun removeLocationUpdates() {
+        Timber.i("Removing location updates")
         try {
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-            LocationUtils.INSTANCE.setRequestingLocationUpdates(this, false);
-            stopSelf();
-        } catch (SecurityException unlikely) {
-            LocationUtils.INSTANCE.setRequestingLocationUpdates(this, true);
-            Timber.e( "Lost location permission. Could not remove updates. " + unlikely);
+            mFusedLocationClient!!.removeLocationUpdates(mLocationCallback!!)
+            setRequestingLocationUpdates(this, false)
+            stopSelf()
+        } catch (unlikely: SecurityException) {
+            setRequestingLocationUpdates(this, true)
+            Timber.e("Lost location permission. Could not remove updates. $unlikely")
         }
-    }
+    }// Channel ID// Extra to help us figure out if we arrived in onStartCommand via the notification or not.
 
+    // The PendingIntent that leads to a call to onStartCommand() in this service.
+
+    // The PendingIntent to launch activity.
+
+    // Set the Channel ID for Android O.
     /**
-     * Returns the {@link NotificationCompat} used as part of the foreground service.
+     * Returns the [NotificationCompat] used as part of the foreground service.
      */
-    private Notification getNotification() {
-        Intent intent = new Intent(this, LocationUpdatesService.class);
+    private val notification: Notification
+        private get() {
+            val intent = Intent(this, LocationUpdatesService::class.java)
+            val text: CharSequence = getLocationText(mLocation)
 
-        CharSequence text = LocationUtils.INSTANCE.getLocationText(mLocation);
+            // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
+            intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true)
 
-        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
-        intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
+            // The PendingIntent that leads to a call to onStartCommand() in this service.
+            val servicePendingIntent = PendingIntent.getService(
+                this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
-        // The PendingIntent that leads to a call to onStartCommand() in this service.
-        PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // The PendingIntent to launch activity.
-        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
-                        activityPendingIntent)
-                .addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
-                        servicePendingIntent)
+            // The PendingIntent to launch activity.
+            val activityPendingIntent = PendingIntent.getActivity(
+                this, 0,
+                Intent(this, MainActivity::class.java), 0
+            )
+            val builder = NotificationCompat.Builder(this)
+                .addAction(
+                    R.drawable.ic_launch, getString(R.string.launch_activity),
+                    activityPendingIntent
+                )
+                .addAction(
+                    R.drawable.ic_cancel, getString(R.string.remove_location_updates),
+                    servicePendingIntent
+                )
                 .setContentText(text)
-                .setContentTitle(LocationUtils.INSTANCE.getLocationTitle(this))
+                .setContentTitle(getLocationTitle(this))
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker(text)
-                .setWhen(System.currentTimeMillis());
+                .setWhen(System.currentTimeMillis())
 
-        // Set the Channel ID for Android O.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(CHANNEL_ID); // Channel ID
+            // Set the Channel ID for Android O.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                builder.setChannelId(CHANNEL_ID) // Channel ID
+            }
+            return builder.build()
         }
-
-        return builder.build();
-    }
-
-    private void getLastLocation() {
-        try {
-            mFusedLocationClient.getLastLocation()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            onNewLocation(task.getResult());
+    private val lastLocation: Unit
+        private get() {
+            try {
+                mFusedLocationClient!!.lastLocation
+                    .addOnCompleteListener { task: Task<Location?> ->
+                        if (task.isSuccessful && task.result != null) {
+                            onNewLocation(task.result)
                         } else {
-                            Timber.d( "Failed to get location.");
+                            Timber.d("Failed to get location.")
                         }
-                    });
-        } catch (SecurityException unlikely) {
-            Timber.e( "Lost location permission." + unlikely);
+                    }
+            } catch (unlikely: SecurityException) {
+                Timber.e("Lost location permission.$unlikely")
+            }
         }
-    }
 
-    private void onNewLocation(Location location) {
-        Timber.d("New location: " + location);
-
-        mLocation = location;
+    private fun onNewLocation(location: Location?) {
+        Timber.d("New location: $location")
+        mLocation = location
 
         // Notify anyone listening for broadcasts about the new location.
-        Intent intent = new Intent(ACTION_BROADCAST);
-        intent.putExtra(EXTRA_LOCATION, location);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        val intent = Intent(ACTION_BROADCAST)
+        intent.putExtra(EXTRA_LOCATION, location)
+        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
         // Update notification content if running as a foreground service.
         if (serviceIsRunningInForeground(this)) {
-            mNotificationManager.notify(NOTIFICATION_ID, getNotification());
+            mNotificationManager!!.notify(NOTIFICATION_ID, notification)
         }
     }
 
     /**
      * Sets the location request parameters.
      */
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    private fun createLocationRequest() {
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = UPDATE_INTERVAL_IN_MILLISECONDS
+        mLocationRequest!!.fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+        mLocationRequest!!.priority =
+            LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its
      * clients, we don't need to deal with IPC.
      */
-    public class LocalBinder extends Binder {
-        public LocationUpdatesService getService() {
-            return LocationUpdatesService.this;
-        }
+    inner class LocalBinder : Binder() {
+        val service: LocationUpdatesService
+            get() = this@LocationUpdatesService
     }
 
     /**
      * Returns true if this is a foreground service.
      *
-     * @param context The {@link Context}.
+     * @param context The [Context].
      */
-    public boolean serviceIsRunningInForeground(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(
-                Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
-                Integer.MAX_VALUE)) {
-            if (getClass().getName().equals(service.service.getClassName())) {
+    fun serviceIsRunningInForeground(context: Context): Boolean {
+        val manager = context.getSystemService(
+            ACTIVITY_SERVICE
+        ) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (javaClass.name == service.service.className) {
                 if (service.foreground) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
+    }
+
+    companion object {
+        private const val PACKAGE_NAME =
+            "com.google.android.gms.location.sample.locationupdatesforegroundservice"
+        private val TAG = LocationUpdatesService::class.java.simpleName
+        private const val CHANNEL_ID = "channel_01"
+        const val ACTION_BROADCAST = PACKAGE_NAME + ".broadcast"
+        const val EXTRA_LOCATION = PACKAGE_NAME + ".location"
+        private const val EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
+                ".started_from_notification"
+
+        /**
+         * The desired interval for location updates. Inexact. Updates may be more or less frequent.
+         */
+        private const val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 30000
+
+        /**
+         * The fastest rate for active location updates. Updates will never be more frequent
+         * than this value.
+         */
+        private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2
+
+        /**
+         * The identifier for the notification displayed for the foreground service.
+         */
+        private const val NOTIFICATION_ID = 12345678
     }
 }
