@@ -22,7 +22,7 @@ But, on `portaite orientation` will show the list of spots in a separate screen,
 
     1- `app` module: consists of two layers:-
 
-    * `Data Layer`: provides the data either from the local database or from the network using the helper class that called `NetworkBoundResource`. (Note, currently in this app the data comes from network only)
+    * `Data Layer`: provides the data either from the local database or from the network. (Note, currently in this app the data comes from network only)
 
     * `Presentation Layer`: any thing related to the UI exists in this layer, and this layer designed using the MVVM architecture.
 
